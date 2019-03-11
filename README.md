@@ -1,0 +1,1 @@
+shares-account-manager
