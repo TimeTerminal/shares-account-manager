@@ -1,0 +1,82 @@
+Position Calculator
+Positions represent what assets and how much of them a client currently holds in their investment account.
+
+Here's an example of a client's positions:
+
+ABC-CA stocks: 10 shares 10 shares of the Canadian (CA) stock ABC
+DEF-US stocks: 20 shares 20 shares of the American (US) stock DEF
+Cash: 100 CAD 100 Canadian dollars
+
+Each asset is represented by its ticker symbol (ABC) and country code (CA).
+
+A client acquires or sells stocks and deposits or withdraws cash through activities.
+
+Each activity tells us how each position will change.
+Starting from our position example above, here are some sample activities:
+
+    Buy 5 shares of ABC-CA for the cost of $30 CAD
+    This activity adds 5 shares to ABC-CA, bringing the total to 15 shares
+    It also reduces the current cash balance by $30, bringing the total to $70
+    Sell 3 shares of DEF-US for $50 CAD
+    This activity reduces 3 shares from DEF-US, bringing the total to 17 shares
+    It also increases the current cash balance by $50, bringing the total to $120
+    Deposit $100 CAD
+    This activity adds $100 to the current cash balance, bringing the total to $220
+    Withdrawal $40 CAD
+    This activity reduces $40 from the current cash balance, bringing the total to $180
+
+Our goal with this challenge is to calculate up-to-date positions for our client based on the provided activities.
+
+Given the following input:
+Deposit
+{
+"date": "2015-02-25",
+"type": "DEP",
+"symbol": null,
+"country": null,
+"quantity": "0.0",
+"net_amount": "200.0"
+}
+Withdrawal
+{
+"date": "2015-03-01",
+"type": "WDL",
+"symbol": null,
+"country": null,
+"quantity": "0.0",
+"net_amount": "-50.0"
+}
+Buy
+{
+"date": "2015-02-26",
+"type": "BUY",
+"symbol": "ABC",
+"country": "CA",
+"quantity": "3.0",
+"net_amount": "-70.0"
+},
+{
+"date": "2015-02-26",
+"type": "BUY",
+"symbol": "ABC",
+"country": "US",
+"quantity": "5.0",
+"net_amount": "-40.0"
+}
+SELL
+{
+"date": "2015-02-27",
+"type": "SELL",
+"symbol": "ABC",
+"country": "CA",
+"quantity": "-1.0",
+"net_amount": "60.0"
+}
+We'd expect the following output:
+ABC-CA: 2 shares
+ABC-US: 5 shares
+Cash: \$100
+Keep in mind
+
+    The client starts with no positions nor cash.
+    The activities might be out-of-order.
