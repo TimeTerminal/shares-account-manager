@@ -2,7 +2,7 @@
 
 ## 1.0 About
 
-Calculates a user's balance and positions held in their investment account based on a set of transactions.
+Calculates a user's balance and positions held in their investment account based on a set of inputted transactions.
 
 The input object (JSON) should contain the following:
 
