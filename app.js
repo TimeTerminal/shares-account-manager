@@ -2,13 +2,28 @@ const { input } = require("./src/consts/input");
 const startingBalance = 0;
 const startingPosition = {};
 
+function updateUserBalance(userHoldings, amount) {
+  userHoldings.balance += parseInt(amount);
+  return userHoldings;
+}
+
+function updateUserPosition(userHoldings, shareName, amount) {
+  userHoldings.position[shareName] += parseInt(amount);
+  return userHoldings;
+}
+
 function main() {
   // Iterate through input
-  let userBalance = startingBalance;
-  let userPosition = startingPosition;
+  let userHoldings = {
+    balance: startingBalance,
+    position: startingPosition
+  };
 
-  console.log("Starting balance: ", userBalance);
-  console.log("Starting position: ", userPosition, "\n======");
+  console.log(
+    "============\nUser holdings at start: ",
+    userHoldings,
+    "\n============"
+  );
 
   input.map(activity => {
     let amountToSpendOrWithdraw = Math.abs(parseInt(activity.net_amount));
@@ -18,62 +33,62 @@ function main() {
     switch (activity.type) {
       // BUY
       case "BUY":
-        console.log("------ \nBUY \n------");
-        if (userBalance < amountToSpendOrWithdraw) {
-          console.log("Insufficient balance for: ", activity.type);
+        console.log("-------------\nBUY\n");
+        if (userHoldings.balance < amountToSpendOrWithdraw) {
+          console.log("Insufficient balance");
         } else {
-          userBalance += parseInt(activity.net_amount);
-
-          if (Object.values(userPosition).indexOf(fullShareName) === -1) {
-            userPosition[fullShareName] = 0;
-            userPosition[fullShareName] += parseInt(activity.quantity);
-          } else {
-            userPosition[fullShareName] += parseInt(activity.quantity);
+          if (
+            Object.values(userHoldings.position).indexOf(fullShareName) === -1
+          ) {
+            userHoldings.position[fullShareName] = 0;
           }
+
+          updateUserBalance(userHoldings, activity.net_amount);
+          updateUserPosition(userHoldings, fullShareName, activity.quantity);
         }
-        console.log("Balance: ", userBalance);
-        console.log("Position: ", userPosition);
+        console.log("Balance: ", userHoldings.balance);
+        console.log("Position: ", userHoldings.position);
         break;
 
       // SELL
       case "SELL":
-        console.log("------ \nSELL \n------");
-        if (Object.keys(userPosition).indexOf(fullShareName) === -1) {
+        console.log("-------------\nSELL\n");
+        if (Object.keys(userHoldings.position).indexOf(fullShareName) === -1) {
           console.log(
             "You have no shares of",
             fullShareName,
             "to available to sell."
           );
         } else {
-          if (userPosition[fullShareName] < sharesToSell) {
+          if (userHoldings.position[fullShareName] < sharesToSell) {
             console.log("Insufficient balance for: ", fullShareName);
           } else {
-            userPosition[fullShareName] += parseInt(activity.quantity);
+            updateUserBalance(userHoldings, activity.net_amount);
+            updateUserPosition(userHoldings, fullShareName, activity.quantity);
           }
-          userBalance += parseInt(activity.net_amount);
         }
-        console.log("Balance: ", userBalance);
-        console.log("Position: ", userPosition);
+        console.log("Balance: ", userHoldings.balance);
+        console.log("Position: ", userHoldings.position);
         break;
 
       // WITHDRAW
       case "WDL":
-        console.log("------ \nWDL \n------");
-        if (userBalance < amountToSpendOrWithdraw) {
-          console.log("Insufficient balance for: ", activity.type);
+        console.log("-------------\nWDL\n");
+        if (userHoldings.balance < amountToSpendOrWithdraw) {
+          console.log("Insufficient balance");
         } else {
-          userBalance += parseInt(activity.net_amount);
+          updateUserBalance(userHoldings, activity.net_amount);
         }
-        console.log("Balance: ", userBalance);
-        console.log("Position: ", userPosition);
+        console.log("Balance: ", userHoldings.balance);
+        console.log("Position: ", userHoldings.position);
         break;
 
       // DEPOSIT
       case "DEP":
-        console.log("------ \nDEP \n------");
-        userBalance += parseInt(activity.net_amount);
-        console.log("Balance: ", userBalance);
-        console.log("Position: ", userPosition);
+        console.log("-------------\nDEP\n");
+        updateUserBalance(userHoldings, activity.net_amount);
+        console.log("Balance: ", userHoldings.balance);
+        console.log("Position: ", userHoldings.position);
         break;
 
       default:
@@ -81,8 +96,11 @@ function main() {
     }
   });
 
-  console.log("======\nFinal balance: ", userBalance);
-  console.log("Final position: ", userPosition);
+  console.log(
+    "============\nUser balance at end: ",
+    userHoldings,
+    "\n============"
+  );
 }
 
 main();
